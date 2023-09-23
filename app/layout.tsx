@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 
+const inter = Inter({ subsets: ['latin'] })
+
 export const metadata: Metadata = {
   title: 'Classroom',
   description: 'Learn and Earn',
@@ -19,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main>
-          <div className="border-b py-1">
+        <main className={inter.className}>
+          <div className="border-b py-2 shadow-md">
             <nav
-              className='flex'
+              className='flex mx-6'
 
             >
               <div className={cn("flex items-center space-x-4 lg:space-x-6 grow")}>
@@ -40,7 +42,7 @@ export default function RootLayout({
               </Link>
               </div>
               
-            <div className='px-2'>
+            <div className=''>
               <Avatar>
                 <AvatarImage src="" />
                 <AvatarFallback>CN</AvatarFallback>

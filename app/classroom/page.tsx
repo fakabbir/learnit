@@ -1,9 +1,12 @@
 "use client"
 import Image from 'next/image'
 import Link from "next/link"
+import ReactPlayer from 'react-player'
 
+// Render a YouTube video player
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import React, { useRef } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -33,14 +36,74 @@ import { useEffect, useState } from 'react'
 
 import ShowVideo from './components/showvideo'
 
+
+interface StudentProgress {
+  // Define your expected structure here
+  course_content: {
+    play_list_tile: string;
+    // Add other properties if applicable
+    list_of_obstacles:{
+      obstacle_url:string;
+    }[];
+  }[];
+  // Add other properties if applicable
+}
 export default function Classroom() {
 
-    const [currentVideo, setCurrentVideo] = useState("https://www.youtube.com/embed/4CsdNhcE07g");
+    const [currentVideo, setCurrentVideo] = useState("");
+
+    const [studentProgress, setStudentProgress] = useState<StudentProgress>();
+    const apiUrl = "https://timizli.onrender.com/get_student_progress/f4amin";
+
+
+    const playerRef = useRef(null);
+
+    // Function to get the played value
+    const getPlayedValue = () => {
+      if(!playerRef.current){
+        return
+      }
+      var player = playerRef.current.getInternalPlayer();
+      var played = player.getCurrentTime();
+      console.log('Played value:', played);
+    };
+  
+  
+    useEffect(()=>{
+      fetch(apiUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Update the studentProgress state with the fetched data
+        console.log(data)
+        setStudentProgress(data);
+        setCurrentVideo(data.course_content[0].list_of_obstacles[0].obstacle_url);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+    },[])
+
+
 
   return (
     <div className="grid grid-cols-4">
       <div className='col-span-3'>
-      <iframe className="w-full h-[75vh]" src={currentVideo} frameBorder="0" allowFullScreen></iframe>
+      {/* <iframe className="w-full h-[70vh]" src={currentVideo} frameBorder="0" allowFullScreen></iframe> */}
+      <div className="w-[100%] h-[75vh]" >
+        {currentVideo ? <><ReactPlayer ref={playerRef} width={"100%"} height={"100%"} url={currentVideo} controls={true}   config={{
+    youtube: {
+      playerVars: { showinfo: 0 }
+    },
+  }} /></>:null}
+      
+
+      </div>
+
 
         <div>
           <Tabs defaultValue="notes" className="w-full">
@@ -79,8 +142,25 @@ export default function Classroom() {
 
       </div>
       <div>
-      <ScrollArea className="h-72 px-2">
-        <Accordion type="single" collapsible className="w-full">
+      <ScrollArea className="h-[92vh] px-2">
+      <Accordion type="single" collapsible className="w-full">
+
+        {studentProgress ? <>
+          {[...studentProgress.course_content].reverse().map(item => <AccordionItem value={item.play_list_tile}><AccordionTrigger>{item.play_list_tile}</AccordionTrigger>
+
+          <AccordionContent>
+            
+              {
+              
+                item.list_of_obstacles.map((video,idx) => <p className='cursor-pointer' onClick={()=>setCurrentVideo(video.obstacle_url)}>Video {idx +1}</p>)
+                // {item.list_of_obstacles.map(video => console.log(video))}
+          }
+            </AccordionContent>
+           
+          </AccordionItem>)}
+        </>:null}
+        </Accordion>
+        {/* <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>Is it accessible?</AccordionTrigger>
             <AccordionContent>
@@ -104,7 +184,7 @@ export default function Classroom() {
                 </span>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
         </ScrollArea>
       </div>
     </div>
