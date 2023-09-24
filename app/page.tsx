@@ -1,11 +1,12 @@
+"use client";
 import Head from 'next/head'
 import { redirect } from 'next/navigation'
 import Script from 'next/script'
 import { Input } from "@/components/ui/input"
 import { BellIcon, HandIcon, RocketIcon } from "@radix-ui/react-icons"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+
 import {
     Card,
     CardContent,
@@ -24,6 +25,8 @@ import {
 
 import { Separator } from "@/components/ui/separator"
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { useGoogleOneTapLogin } from '@react-oauth/google';
 
 const notifications = [
     {
@@ -54,9 +57,95 @@ export default function Main() {
         console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
 
+    
+  function handle(event:any){
+    console.log(event)
+  }
+
+
+
+  useEffect(()=>{
+
+  },[])
+  
+  
+
+
+    // useEffect(()=>{
+
+        
+
+
+    //     // window.onGoogleLibraryLoad = () => {
+    //     //     google.accounts.id.initialize({
+    //     //       client_id:'355050548644-kmlqgmfag9543ia894ab4dja8ip6kvaj.apps.googleusercontent.com',
+    //     //       cancel_on_tap_outside: false,
+    //     //       callback: handle,
+    //     //       prompt_parent_id: "root",
+    //     //       //intermediate_iframe_close_callback : close_callback1
+    //     //     });
+    //     //     google.accounts.id.prompt((notification) => {
+    //     //       if (notification.isNotDisplayed()) {
+    //     //         console.log(notification.getNotDisplayedReason());
+    //     //       } else if (notification.isSkippedMoment()) {
+    //     //         console.log("Skipped")
+    //     //         console.log(notification.getSkippedReason());
+    //     //       } else if (notification.isDismissedMoment()) {
+    //     //         console.log(notification.getDismissedReason());
+    //     //       } else {
+                
+    //     //       }
+    //     //     });
+    //     //   }
+
+    //     // window.onload = function () {
+    //     //     google.accounts.id.initialize({
+    //     //       client_id: "355050548644-kmlqgmfag9543ia894ab4dja8ip6kvaj.apps.googleusercontent.com",
+    //     //       callback:handle
+    //     //     });
+    //     //     google.accounts.id.prompt();
+    //     //   };
+    // })
+
 
     return (
         <>
+        
+        {/* <div id="g_id_onload"
+     data-client_id="355050548644-kmlqgmfag9543ia894ab4dja8ip6kvaj.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-callback={handle}
+     data-auto_select="true"
+     data-itp_support="true">
+</div>
+
+<div className="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div> */}
+{/* <div id="g_id_onload"
+     data-client_id="355050548644-kmlqgmfag9543ia894ab4dja8ip6kvaj.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="redirect"
+     data-login_uri="http://localhost:3000/"
+     data-callback="http://localhost:3000/auth"
+     data-auto_select="true"
+     data-itp_support="true">
+</div>
+
+<div className="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div> */}
             <div className=''>
                 <div className='bg-gray-100  h-[40vh] relative'>
                     <div className='absolute bg-blue-100 w-[30%]  mt-10 mx-10 shadow-md pb-4'>
