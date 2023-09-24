@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,6 +12,17 @@ export default function Navbar() {
     <>
       <nav className='flex mx-6'>
         <div className={cn("flex items-center space-x-4 lg:space-x-6 grow")}>
+          <div className='logo'>
+            <Link href='/'>
+              <Image
+                src='/assets/images/logo.png'
+                width={(162 * 3) / 4}
+                height={(67 * 3) / 4}
+                quality={100}
+                alt={"SkillZeit"}
+              />
+            </Link>
+          </div>
           <Link
             href='/home'
             className='text-sm font-medium transition-colors hover:text-primary'
