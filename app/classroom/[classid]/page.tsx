@@ -30,6 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
 
 import { signIn, useSession } from "next-auth/react";
+import { stat } from "fs";
 
 interface StudentProgress {
   // Define your expected structure here
@@ -44,20 +45,25 @@ interface StudentProgress {
 }
 export default function Classroom({ params }: { params: { classid: string } }) {
   const { data: session, status } = useSession();
-  if (status !== "authenticated") {
-    const handleSignIn = async () => {
-      // const queryString = window.location.search;
-      // const urlParams = new URLSearchParams(queryString);
-      // alert(urlParams.get("callbackUrl"));
-      const result = await signIn("google", {
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect: true,
-        callbackUrl: "/classroom/" + params.classid,
-      });
-    };
-    handleSignIn();
-  }
+
+  const handleSignIn = async () => {
+    // const queryString = window.location.search;
+    // const urlParams = new URLSearchParams(queryString);
+    // alert(urlParams.get("callbackUrl"));
+    const result = await signIn("google", {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect: true,
+      callbackUrl: "/classroom/" + params.classid,
+    });
+  };
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      handleSignIn();
+    }
+    console.log(status);
+  }, [session, status]);
 
   const [currentVideo, setCurrentVideo] = useState("");
 
