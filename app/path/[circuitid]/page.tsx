@@ -54,7 +54,12 @@ export default function Page({ params }: { params: { circuitid: string } }) {
         redirect: "follow",
       };
 
-      fetch(`https://timizli.onrender.com/user_courses`, requestOptions)
+      fetch(`https://timizli.onrender.com/user_courses`, {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Request failed with status: ${response.status}`);
@@ -64,7 +69,7 @@ export default function Page({ params }: { params: { circuitid: string } }) {
         .then((data) => {
           // Update the studentProgress state with the fetched data
           console.log(data);
-          setEnrolledCourses(data.content);
+          setCourseOverview(data.content);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -121,7 +126,7 @@ export default function Page({ params }: { params: { circuitid: string } }) {
           Courses
         </p>
         <div className='flex flex-col space-y-3 w-1/2'>
-          {courseOverview.list_of_courses.map((item, idx) => (
+          {courseOverview.list_of_courses.map((item: any, idx: any) => (
             <Card key={idx}>
               <CardHeader>
                 <CardTitle>{item.course_name}</CardTitle>

@@ -43,13 +43,13 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {session ? (
+        {session?.user?.name ? (
           <div className=''>
             <Avatar>
               <AvatarFallback>
                 {(
-                  session.user.name?.split(" ")[0][0] +
-                  session.user.name?.split(" ")[1][0]
+                  session?.user?.name?.split(" ")[0][0] +
+                  session?.user?.name?.split(" ")[1][0]
                 ).toUpperCase()}
               </AvatarFallback>
             </Avatar>

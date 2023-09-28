@@ -60,12 +60,12 @@ export default function Classroom({ params }: { params: { classid: string } }) {
 
   const playerRef = useRef(null);
 
-  function markCompleted(idxPlaylist, idx, video) {
+  function markCompleted(idxPlaylist: any, idx: any, video: any) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      user_email: session.user?.email,
+      user_email: session?.user?.email,
       video_id: video.video_id,
     });
 
@@ -76,9 +76,12 @@ export default function Classroom({ params }: { params: { classid: string } }) {
       redirect: "follow",
     };
 
-    fetch(`https://timizli.onrender.com/trackprogress`, requestOptions).then(
-      (response) => {}
-    );
+    fetch(`https://timizli.onrender.com/trackprogress`, {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    }).then((response) => {});
 
     var studentData = JSON.parse(JSON.stringify(studentProgress));
     var prev_val =
@@ -110,7 +113,12 @@ export default function Classroom({ params }: { params: { classid: string } }) {
         redirect: "follow",
       };
 
-      fetch(`https://timizli.onrender.com/user_course`, requestOptions)
+      fetch(`https://timizli.onrender.com/user_course`, {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Request failed with status: ${response.status}`);
@@ -159,48 +167,54 @@ export default function Classroom({ params }: { params: { classid: string } }) {
           >
             {studentProgress && studentProgress.progresss.sections ? (
               <>
-                {studentProgress.progresss.sections.map((item, idxPlaylist) => (
-                  <AccordionItem
-                    key={idxPlaylist}
-                    value={item.section_name}
-                  >
-                    <AccordionTrigger>
-                      <div>{item.section_name}</div>
-                    </AccordionTrigger>
+                {studentProgress.progresss.sections.map(
+                  (item: any, idxPlaylist: any) => (
+                    <AccordionItem
+                      key={idxPlaylist}
+                      value={item.section_name}
+                    >
+                      <AccordionTrigger>
+                        <div>{item.section_name}</div>
+                      </AccordionTrigger>
 
-                    <AccordionContent>
-                      {
-                        item.videos.map((video, idx) => (
-                          <div
-                            className='flex items-center space-x-2 my-1'
-                            key={idx}
-                          >
+                      <AccordionContent>
+                        {
+                          item.videos.map((video: any, idx: any) => (
                             <div
-                              onClick={() =>
-                                markCompleted(idxPlaylist, idx, video)
-                              }
+                              className='flex items-center space-x-2 my-1'
+                              key={idx}
                             >
-                              <Checkbox
-                                checked={video && video.watched ? true : false}
-                              />
-                            </div>
-
-                            <label className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                              <p
-                                key={idx}
-                                className='cursor-pointer'
-                                onClick={() => setCurrentVideo(video.video_url)}
+                              <div
+                                onClick={() =>
+                                  markCompleted(idxPlaylist, idx, video)
+                                }
                               >
-                                {video.video_name}
-                              </p>
-                            </label>
-                          </div>
-                        ))
-                        // {item.list_of_obstacles.map(video => console.log(video))}
-                      }
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
+                                <Checkbox
+                                  checked={
+                                    video && video.watched ? true : false
+                                  }
+                                />
+                              </div>
+
+                              <label className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+                                <p
+                                  key={idx}
+                                  className='cursor-pointer'
+                                  onClick={() =>
+                                    setCurrentVideo(video.video_url)
+                                  }
+                                >
+                                  {video.video_name}
+                                </p>
+                              </label>
+                            </div>
+                          ))
+                          // {item.list_of_obstacles.map(video => console.log(video))}
+                        }
+                      </AccordionContent>
+                    </AccordionItem>
+                  )
+                )}
               </>
             ) : null}
           </Accordion>

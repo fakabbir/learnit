@@ -122,7 +122,7 @@ export default function Page({ params }: { params: { courseid: string } }) {
           >
             {courseOverview.sections ? (
               <>
-                {courseOverview.sections.map((item, idxPlaylist) => (
+                {courseOverview.sections.map((item: any, idxPlaylist: any) => (
                   <AccordionItem
                     key={idxPlaylist}
                     value={item.idxPlaylist}

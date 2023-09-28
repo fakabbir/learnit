@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { json } from "stream/consumers";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -25,7 +26,12 @@ export default function Home() {
         redirect: "follow",
       };
 
-      fetch(`https://timizli.onrender.com/user_courses`, requestOptions)
+      fetch(`https://timizli.onrender.com/user_courses`, {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Request failed with status: ${response.status}`);
@@ -45,7 +51,7 @@ export default function Home() {
   return (
     <>
       <p>Home Content</p>
-      {enrolledCourses.map((item, idx) => (
+      {enrolledCourses.map((item: any, idx) => (
         <Link
           href={"/learn/" + item.course_id}
           key={idx}

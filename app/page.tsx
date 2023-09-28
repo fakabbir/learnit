@@ -125,7 +125,7 @@ export default function Main() {
             Popular language courses
           </p>
 
-          {mastercontent.map((item, idx) => (
+          {mastercontent.map((item: any, idx: any) => (
             <Card
               className={cn("w-[380px]")}
               key={idx}
