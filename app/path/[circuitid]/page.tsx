@@ -69,7 +69,7 @@ export default function Page({ params }: { params: { circuitid: string } }) {
         .then((data) => {
           // Update the studentProgress state with the fetched data
           console.log(data);
-          setCourseOverview(data.content);
+          // setCourseOverview(data.content);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
