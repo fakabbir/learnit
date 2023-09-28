@@ -35,12 +35,6 @@ export default function Navbar() {
           >
             Home
           </Link>
-          <Link
-            href='/classroom/defar'
-            className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
-          >
-            Classroom
-          </Link>
         </div>
 
         {session?.user?.name ? (
