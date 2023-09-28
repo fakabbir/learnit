@@ -54,7 +54,7 @@ export default function Page({ params }: { params: { circuitid: string } }) {
         redirect: "follow",
       };
 
-      fetch(`https://timizli.onrender.com/user_courses`, {
+      fetch(`https://timizli.onrender.com/register/coursexl`, {
         method: "POST",
         headers: myHeaders,
         body: raw,
