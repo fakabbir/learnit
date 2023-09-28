@@ -125,8 +125,11 @@ export default function Main() {
             Popular language courses
           </p>
 
-          {mastercontent.map((item) => (
-            <Card className={cn("w-[380px]")}>
+          {mastercontent.map((item, idx) => (
+            <Card
+              className={cn("w-[380px]")}
+              key={idx}
+            >
               <CardHeader>
                 <CardTitle>{item.course_name}</CardTitle>
                 <CardDescription>

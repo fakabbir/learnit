@@ -171,7 +171,10 @@ export default function Classroom({ params }: { params: { classid: string } }) {
                     <AccordionContent>
                       {
                         item.videos.map((video, idx) => (
-                          <div className='flex items-center space-x-2 my-1'>
+                          <div
+                            className='flex items-center space-x-2 my-1'
+                            key={idx}
+                          >
                             <div
                               onClick={() =>
                                 markCompleted(idxPlaylist, idx, video)

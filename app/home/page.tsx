@@ -45,8 +45,11 @@ export default function Home() {
   return (
     <>
       <p>Home Content</p>
-      {enrolledCourses.map((item) => (
-        <Link href={"/learn/" + item.course_id}>
+      {enrolledCourses.map((item, idx) => (
+        <Link
+          href={"/learn/" + item.course_id}
+          key={idx}
+        >
           {item.progresss.course_name}
         </Link>
       ))}

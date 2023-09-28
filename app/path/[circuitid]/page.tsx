@@ -121,8 +121,8 @@ export default function Page({ params }: { params: { circuitid: string } }) {
           Courses
         </p>
         <div className='flex flex-col space-y-3 w-1/2'>
-          {courseOverview.list_of_courses.map((item) => (
-            <Card>
+          {courseOverview.list_of_courses.map((item, idx) => (
+            <Card key={idx}>
               <CardHeader>
                 <CardTitle>{item.course_name}</CardTitle>
                 <CardDescription>
