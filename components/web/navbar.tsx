@@ -47,9 +47,11 @@ export default function Navbar() {
           <div className=''>
             <Avatar>
               <AvatarFallback>
-                {(
-                  session?.user?.name?.split(" ")[0][0] +
-                  session?.user?.name?.split(" ")[1][0]
+                {session?.user?.name?.split(" ")[0][0].toUpperCase()}
+
+                {(session?.user?.name?.split(" ").length > 1
+                  ? session?.user?.name?.split(" ")[1][0]
+                  : ""
                 ).toUpperCase()}
               </AvatarFallback>
             </Avatar>

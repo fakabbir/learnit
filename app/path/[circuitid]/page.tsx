@@ -24,7 +24,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
+import { signIn } from "next-auth/react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -75,9 +75,19 @@ export default function Page({ params }: { params: { circuitid: string } }) {
           console.error("Error fetching data:", error);
         });
     } else {
+      alert("redirecting...");
       redirect("/api/auth/signin?callbackUrl=/path/" + params.circuitid);
     }
   }
+
+  const handleSignIn = async () => {
+    const result = await signIn("google", {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect: true,
+      callbackUrl: ("/path/" + params.circuitid) as string,
+    });
+  };
 
   useEffect(() => {
     fetch("https://timizli.onrender.com/" + `coursexl/${params.circuitid}`)
@@ -108,12 +118,21 @@ export default function Page({ params }: { params: { circuitid: string } }) {
             New Leading Data
           </p>
 
-          <Button
-            className=''
-            onClick={registerForCourse}
-          >
-            <HandIcon className='mr-2 h-4 w-4' /> Enroll Now
-          </Button>
+          {session ? (
+            <Button
+              className=''
+              onClick={registerForCourse}
+            >
+              <HandIcon className='mr-2 h-4 w-4' /> Enroll Now
+            </Button>
+          ) : (
+            <Button
+              className=''
+              onClick={handleSignIn}
+            >
+              <HandIcon className='mr-2 h-4 w-4' /> SignIn
+            </Button>
+          )}
         </div>
       </div>
 
