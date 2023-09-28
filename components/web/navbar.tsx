@@ -4,9 +4,15 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarIcon } from "@radix-ui/react-icons";
+import { signIn, useSession } from "next-auth/react";
+
 export default function Navbar() {
   //   if (isLoading) return <div>Loading...</div>;
   //   if (error) return <div>{error.message}</div>;
+  const { data: session, status } = useSession();
+
+  console.log(session);
+  console.log(status);
 
   return (
     <>
@@ -37,10 +43,15 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {1 == 1 ? (
+        {session ? (
           <div className=''>
             <Avatar>
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>
+                {(
+                  session.user.name?.split(" ")[0][0] +
+                  session.user.name?.split(" ")[1][0]
+                ).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
           </div>
         ) : (

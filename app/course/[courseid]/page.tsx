@@ -40,22 +40,20 @@ interface StudentProgress {
   // Add other properties if applicable
 }
 
-export default function Page({
-  params,
-}: {
-  params: { coursesingleid: string };
-}) {
+export default function Page({ params }: { params: { courseid: string } }) {
   const [currentVideo, setCurrentVideo] = useState("");
 
   const [studentProgress, setStudentProgress] = useState<StudentProgress>();
-  const apiUrl = "http://localhost:8000/get_student_progress/f4amin";
+  const apiUrl = "https://timizli.onrender.com/get_student_progress/f4amin";
 
-  const playerRef = useRef(null);
+  const [courseOverview, setCourseOverview] = useState<any>({
+    sections: [],
+  });
 
   // Function to get the played value
 
   useEffect(() => {
-    fetch(apiUrl)
+    fetch(`https://timizli.onrender.com/course/${params.courseid}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Request failed with status: ${response.status}`);
@@ -65,10 +63,7 @@ export default function Page({
       .then((data) => {
         // Update the studentProgress state with the fetched data
         console.log(data);
-        setStudentProgress(data);
-        setCurrentVideo(
-          data.course_content[0].list_of_obstacles[0].obstacle_url
-        );
+        setCourseOverview(data.content);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -125,35 +120,30 @@ export default function Page({
             collapsible
             className='w-full'
           >
-            {studentProgress ? (
+            {courseOverview.sections ? (
               <>
-                {[...studentProgress.course_content]
-                  .reverse()
-                  .map((item, idxPlaylist) => (
-                    <AccordionItem
-                      key={idxPlaylist}
-                      value={item.play_list_tile}
-                    >
-                      <AccordionTrigger>{item.play_list_tile}</AccordionTrigger>
+                {courseOverview.sections.map((item, idxPlaylist) => (
+                  <AccordionItem
+                    key={idxPlaylist}
+                    value={item.idxPlaylist}
+                  >
+                    <AccordionTrigger>{item.section_name}</AccordionTrigger>
 
-                      <AccordionContent>
-                        {
-                          item.list_of_obstacles.map((video, idx) => (
-                            <p
-                              key={idx}
-                              className='cursor-pointer'
-                              onClick={() =>
-                                setCurrentVideo(video.obstacle_url)
-                              }
-                            >
-                              Video {idx + 1}
-                            </p>
-                          ))
-                          // {item.list_of_obstacles.map(video => console.log(video))}
-                        }
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
+                    <AccordionContent>
+                      <p>htlo</p>
+                      {/* {
+                        item.videos.map((video, idx) => (
+                          <p
+                            key={idx}
+                            className='cursor-pointer'
+                          >
+                            {video.video_name}
+                          </p>
+                        ))
+                      } */}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
               </>
             ) : null}
           </Accordion>

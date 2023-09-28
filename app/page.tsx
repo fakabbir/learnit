@@ -25,7 +25,7 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 
 const notifications = [
@@ -60,7 +60,24 @@ export default function Main() {
     console.log(event);
   }
 
-  useEffect(() => {}, []);
+  const [mastercontent, setMastercontent] = useState<any>([]);
+  useEffect(() => {
+    fetch("https://timizli.onrender.com/course_bundles")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Update the studentProgress state with the fetched data
+        console.log(data);
+        setMastercontent(data.content);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   return (
     <>
@@ -107,22 +124,25 @@ export default function Main() {
           <p className='scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0'>
             Popular language courses
           </p>
-          <Card className={cn("w-[380px]")}>
-            <CardHeader>
-              <CardTitle>Arabic A1 to C1</CardTitle>
-              <CardDescription>
-                For beginners, based on V Rahims Books
-              </CardDescription>
-            </CardHeader>
-            <CardContent className='grid gap-4'></CardContent>
-            <CardFooter>
-              <Link href='/path/arabica1toc1'>
-                <Button className='w-full'>
-                  <HandIcon className='mr-2 h-4 w-4' /> View Details
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
+
+          {mastercontent.map((item) => (
+            <Card className={cn("w-[380px]")}>
+              <CardHeader>
+                <CardTitle>{item.course_name}</CardTitle>
+                <CardDescription>
+                  {item.list_of_courses.length} Courses inside
+                </CardDescription>
+              </CardHeader>
+              <CardContent className='grid gap-4'></CardContent>
+              <CardFooter>
+                <Link href={"/path/" + item.course_id}>
+                  <Button className='w-full'>
+                    <HandIcon className='mr-2 h-4 w-4' /> View Details
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
         <div className='mx-8 mb-16'>
           <p className='scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0'>

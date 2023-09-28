@@ -28,21 +28,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
-
+import { Checkbox } from "@/components/ui/checkbox";
 import { signIn, useSession } from "next-auth/react";
-import { stat } from "fs";
 
-interface StudentProgress {
-  // Define your expected structure here
-  course_content: {
-    play_list_tile: string;
-    // Add other properties if applicable
-    list_of_obstacles: {
-      obstacle_url: string;
-    }[];
-  }[];
-  // Add other properties if applicable
-}
 export default function Classroom({ params }: { params: { classid: string } }) {
   const { data: session, status } = useSession();
 
@@ -67,36 +55,82 @@ export default function Classroom({ params }: { params: { classid: string } }) {
 
   const [currentVideo, setCurrentVideo] = useState("");
 
-  const [studentProgress, setStudentProgress] = useState<StudentProgress>();
+  const [studentProgress, setStudentProgress] = useState<any>();
   const apiUrl = "https://timizli.onrender.com/get_student_progress/f4amin";
 
   const playerRef = useRef(null);
 
+  function markCompleted(idxPlaylist, idx, video) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      user_email: session.user?.email,
+      video_id: video.video_id,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`https://timizli.onrender.com/trackprogress`, requestOptions).then(
+      (response) => {}
+    );
+
+    var studentData = JSON.parse(JSON.stringify(studentProgress));
+    var prev_val =
+      studentData.progresss.sections[idxPlaylist].videos[idx].watched;
+    if (prev_val === true) {
+      studentData.progresss.sections[idxPlaylist].videos[idx].watched = false;
+    } else {
+      studentData.progresss.sections[idxPlaylist].videos[idx].watched = true;
+    }
+
+    setStudentProgress(studentData);
+  }
+
   useEffect(() => {
-    fetch(apiUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Request failed with status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Update the studentProgress state with the fetched data
-        console.log(data);
-        setStudentProgress(data);
-        setCurrentVideo(
-          data.course_content[0].list_of_obstacles[0].obstacle_url
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+    if (session) {
+      console.log(session);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+        user_email: session.user?.email,
+        course_id: params.classid,
       });
-  }, []);
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(`https://timizli.onrender.com/user_course`, requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Request failed with status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Update the studentProgress state with the fetched data
+          console.log(data);
+          setStudentProgress(data.content);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [session]);
 
   return (
     <div className='grid grid-cols-4'>
       <div className='col-span-3'>
-        {/* <iframe className="w-full h-[70vh]" src={currentVideo} frameBorder="0" allowFullScreen></iframe> */}
         <div className='w-[100%] h-[75vh]'>
           {currentVideo ? (
             <>
@@ -115,51 +149,6 @@ export default function Classroom({ params }: { params: { classid: string } }) {
             </>
           ) : null}
         </div>
-
-        <div>
-          <Tabs
-            defaultValue='notes'
-            className='w-full'
-          >
-            <TabsList className='grid w-full grid-cols-2'>
-              <TabsTrigger value='notes'>Notes</TabsTrigger>
-              <TabsTrigger value='discussion'>Discussion</TabsTrigger>
-            </TabsList>
-            <TabsContent value='notes'>
-              <p>Notes would come over here</p>
-            </TabsContent>
-            <TabsContent value='discussion'>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Password</CardTitle>
-                  <CardDescription>
-                    Change your password here. After saving, you&apos;ll be
-                    logged out.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className='space-y-2'>
-                  <div className='space-y-1'>
-                    <Label htmlFor='current'>Current password</Label>
-                    <Input
-                      id='current'
-                      type='password'
-                    />
-                  </div>
-                  <div className='space-y-1'>
-                    <Label htmlFor='new'>New password</Label>
-                    <Input
-                      id='new'
-                      type='password'
-                    />
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button>Save password</Button>
-                </CardFooter>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
       </div>
       <div>
         <ScrollArea className='h-[92vh] px-2'>
@@ -168,35 +157,47 @@ export default function Classroom({ params }: { params: { classid: string } }) {
             collapsible
             className='w-full'
           >
-            {studentProgress ? (
+            {studentProgress && studentProgress.progresss.sections ? (
               <>
-                {[...studentProgress.course_content]
-                  .reverse()
-                  .map((item, idxPlaylist) => (
-                    <AccordionItem
-                      key={idxPlaylist}
-                      value={item.play_list_tile}
-                    >
-                      <AccordionTrigger>{item.play_list_tile}</AccordionTrigger>
+                {studentProgress.progresss.sections.map((item, idxPlaylist) => (
+                  <AccordionItem
+                    key={idxPlaylist}
+                    value={item.section_name}
+                  >
+                    <AccordionTrigger>
+                      <div>{item.section_name}</div>
+                    </AccordionTrigger>
 
-                      <AccordionContent>
-                        {
-                          item.list_of_obstacles.map((video, idx) => (
-                            <p
-                              key={idx}
-                              className='cursor-pointer'
+                    <AccordionContent>
+                      {
+                        item.videos.map((video, idx) => (
+                          <div className='flex items-center space-x-2 my-1'>
+                            <div
                               onClick={() =>
-                                setCurrentVideo(video.obstacle_url)
+                                markCompleted(idxPlaylist, idx, video)
                               }
                             >
-                              Video {idx + 1}
-                            </p>
-                          ))
-                          // {item.list_of_obstacles.map(video => console.log(video))}
-                        }
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
+                              <Checkbox
+                                checked={video && video.watched ? true : false}
+                              />
+                            </div>
+
+                            <label className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+                              <p
+                                key={idx}
+                                className='cursor-pointer'
+                                onClick={() => setCurrentVideo(video.video_url)}
+                              >
+                                {video.video_name}
+                              </p>
+                            </label>
+                          </div>
+                        ))
+                        // {item.list_of_obstacles.map(video => console.log(video))}
+                      }
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
               </>
             ) : null}
           </Accordion>
