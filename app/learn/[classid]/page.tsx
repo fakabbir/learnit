@@ -199,7 +199,9 @@ export default function Classroom({ params }: { params: { classid: string } }) {
   }, [session]);
 
   return (
-    <div className='grid grid-cols-4'>
+    <>
+    <div className="hidden lg:block">
+ <div className='grid grid-cols-4'>
       <div className={showingPlaylist ? 'col-span-3' : 'col-span-4'}>
         <Button variant="outline" size="icon" onClick={() => setShowingPlaylist(!showingPlaylist)} className="float-right">
           {showingPlaylist ? <DoubleArrowRightIcon className="h-4 w-4" /> :
@@ -331,5 +333,111 @@ export default function Classroom({ params }: { params: { classid: string } }) {
         </ScrollArea>
       </div>
     </div>
+    </div>
+    <div className="lg:hidden">
+      {/* mobile screen */}
+      {studentProgress ? <div className="pb-6 pt-2 border-b items-center flex px-2">
+          <div className="w-[96%]">
+            <h4 className="scroll-m-20 text-xl font-semibold tracking-tight capitalize"> {studentProgress.course_id.replace("-", " ")}</h4>
+            <Progress value={progressPercent} className="" />
+            <p className="leading-7 [&:not(:first-child)]:mt-1">{progressPercent}% completed</p>
+          </div>
+
+        </div> : null}
+        <div className=''>
+          {currentVideo ? (
+
+            <div className=" mx-auto mt-4">
+              <div className="flex justify-between">
+                <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0">
+                  {currentVideoName}
+                </h2>
+
+              </div>
+              <div className="h-[30vh]">
+
+              <ReactPlayer
+                ref={playerRef}
+                width={"100%"}
+                height={"100%"}
+                url={currentVideo}
+                controls={true}
+                config={{
+                  youtube: {
+                    playerVars: { showinfo: 0 },
+                  },
+                }}
+              />
+              </div>
+            </div>
+          ) : null}
+        </div>
+      
+   <Accordion
+            type='single'
+            collapsible
+            className='w-full'
+          >
+            {studentProgress && studentProgress.progresss.sections ? (
+              <>
+                {studentProgress.progresss.sections.map(
+                  (item: any, idxPlaylist: any) => (
+                    <AccordionItem
+                      key={idxPlaylist}
+                      value={item.section_name}
+                      className=""
+                    >
+                      <AccordionTrigger className="px-2">
+                        <div>{item.section_name}</div>
+                      </AccordionTrigger>
+
+                      <AccordionContent className="px-2">
+                        {
+                          item.videos.map((video: any, idx: any) => (
+                            <div
+                              className='flex items-center space-x-2 my-1'
+                              key={idx}
+                            >
+                              <div
+                                onClick={() =>
+                                  markCompleted(idxPlaylist, idx, video)
+                                }
+                              >
+                                <Checkbox
+                                  checked={
+                                    video && video.watched ? true : false
+                                  }
+                                />
+                              </div>
+
+                              <label className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+                                <p
+                                  key={idx}
+                                  className='cursor-pointer'
+                                  onClick={() => {
+                                    setCurrentVideo(video.video_url)
+                                    setCurrentVideoName(video.video_name)
+                                  }
+                                  }
+                                >
+                                  {video.video_name}
+                                </p>
+                              </label>
+                            </div>
+                          ))
+                          // {item.list_of_obstacles.map(video => console.log(video))}
+                        }
+                      </AccordionContent>
+                    </AccordionItem>
+                  )
+                )}
+              </>
+            ) : null}
+          </Accordion>
+         
+      
+    </div>
+    </>
+    
   );
 }
