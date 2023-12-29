@@ -1,4 +1,6 @@
-"use client";
+'use client'
+ 
+import { usePathname } from 'next/navigation'
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -12,6 +14,7 @@ export default function Navbar() {
   //   if (isLoading) return <div>Loading...</div>;
   //   if (error) return <div>{error.message}</div>;
   const { data: session, status } = useSession();
+  const pathname = usePathname()
 
   console.log(session);
   console.log(status);
@@ -34,10 +37,11 @@ export default function Navbar() {
           </div>
 
         </div>
-        <div className="border-l col-span-1 flex items-center justify-between px-2">
+        <div className=
+        {pathname.includes("learn") ? "border-l col-span-1 flex items-center justify-between px-2":
+        "col-span-1 flex items-center justify-between px-2"}>
           <div>
-
-          <Link
+            {pathname.includes("learn") ?<Link
              href='/home'
              className='text-sm font-medium transition-colors hover:text-primary'
            >
@@ -45,7 +49,9 @@ export default function Navbar() {
              <Button>
             <HomeIcon className="mr-2 h-4 w-4" /> Home
           </Button>
-           </Link>
+           </Link>: null}
+
+          
          
 
           {/* <Link

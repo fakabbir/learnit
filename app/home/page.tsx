@@ -1,9 +1,21 @@
 "use client";
-
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { json } from "stream/consumers";
+import book1 from '../../public/assets/images/book1.jpg';
+import book2 from '../../public/assets/images/book2.jpg';
+import book3 from '../../public/assets/images/book3.jpg';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -49,16 +61,34 @@ export default function Home() {
     }
   }, [status]);
   return (
-    <>
-      <p>Home Content</p>
-      {enrolledCourses.map((item: any, idx) => (
-        <Link
-          href={"/learn/" + item.course_id}
-          key={idx}
-        >
-          {item.progresss.course_name}
-        </Link>
-      ))}
-    </>
+    <div className="w-10/12 mx-auto">
+      <h2 className="scroll-m-20 pt-8 pb-8 text-3xl tracking-tight first:mt-0">
+        Lecture Series
+      </h2>
+
+      <div className="flex space-x-8">
+        {enrolledCourses.map((item: any, idx) => (
+
+          <>
+          <Link
+                  href={"/learn/" + item.course_id}
+                  key={idx}
+                >
+          <Image src={item.course_id == "book-1" ? book1 : (item.course_id == "book-2" ? book2: (item.course_id == "book-3" ? book3: book1)) } alt="book"
+                width={200} height={300}
+                // Make the image display full width
+                // style={{
+                //   width: '200',
+                //   height: 'auto',
+                // }}
+                />
+                </Link>
+          </>
+
+        ))}
+      </div>
+
+
+    </div>
   );
 }
