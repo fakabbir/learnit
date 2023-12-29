@@ -24,10 +24,10 @@ export default function RootLayout({
     <html lang='en'>
       <AuthProvider>
         <body>
-          <main className={inter.className}>
-            <div className='border-b py-2 shadow-md'>
+          <main className={inter.className }>
+            <nav className='border-b py-2'>
               <Navbar />
-            </div>
+            </nav>
             {children}
           </main>
         </body>

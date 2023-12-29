@@ -13,6 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Progress } from "@/components/ui/progress"
 import {
   Card,
   CardContent,
@@ -141,7 +142,7 @@ export default function Classroom({ params }: { params: { classid: string } }) {
       <div className='col-span-3'>
         <div className='w-[100%] h-[75vh]'>
           {currentVideo ? (
-            <>
+            <div className="w-3/4 mx-auto mt-4 h-[90%]">
               <ReactPlayer
                 ref={playerRef}
                 width={"100%"}
@@ -154,12 +155,20 @@ export default function Classroom({ params }: { params: { classid: string } }) {
                   },
                 }}
               />
-            </>
+            </div>
           ) : null}
         </div>
       </div>
-      <div>
-        <ScrollArea className='h-[92vh] px-2'>
+      <div className="border-l">
+        <div className="pb-6 pt-2 border-b items-center flex px-2">
+          <div className="w-[90%]">
+              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight"> Book 2</h4>
+              <Progress value={14} className="" />
+              <p  className="leading-7 [&:not(:first-child)]:mt-1">14% completed</p>
+          </div>
+              
+        </div>
+        <ScrollArea className='h-[92vh]'>
           <Accordion
             type='single'
             collapsible
@@ -172,12 +181,13 @@ export default function Classroom({ params }: { params: { classid: string } }) {
                     <AccordionItem
                       key={idxPlaylist}
                       value={item.section_name}
+                      className=""
                     >
-                      <AccordionTrigger>
+                      <AccordionTrigger className="px-2">
                         <div>{item.section_name}</div>
                       </AccordionTrigger>
 
-                      <AccordionContent>
+                      <AccordionContent className="px-2">
                         {
                           item.videos.map((video: any, idx: any) => (
                             <div

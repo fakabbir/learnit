@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AvatarIcon } from "@radix-ui/react-icons";
+import { AvatarIcon, HomeIcon } from "@radix-ui/react-icons";
 import { signIn, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button"
+ 
 
 export default function Navbar() {
   //   if (isLoading) return <div>Loading...</div>;
@@ -16,8 +18,9 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className='flex mx-6'>
-        <div className={cn("flex items-center space-x-4 lg:space-x-6 grow")}>
+      <div className='grid grid-cols-4'>
+        <div className='col-span-3'>
+
           <div className='logo'>
             <Link href='/'>
               <Image
@@ -29,33 +32,103 @@ export default function Navbar() {
               />
             </Link>
           </div>
-          <Link
-            href='/home'
-            className='text-sm font-medium transition-colors hover:text-primary'
-          >
-            Home
-          </Link>
+
         </div>
+        <div className="border-l col-span-1 flex items-center justify-between px-2">
+          <div>
 
-        {session?.user?.name ? (
-          <div className=''>
-            <Avatar>
-              <AvatarFallback>
-                {session?.user?.name?.split(" ")[0][0].toUpperCase()}
+          <Link
+             href='/home'
+             className='text-sm font-medium transition-colors hover:text-primary'
+           >
 
-                {(session?.user?.name?.split(" ").length > 1
-                  ? session?.user?.name?.split(" ")[1][0]
-                  : ""
-                ).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        ) : (
-          <Avatar>
-            <AvatarIcon className='w-6 h-6'></AvatarIcon>
-          </Avatar>
-        )}
-      </nav>
+             <Button>
+            <HomeIcon className="mr-2 h-4 w-4" /> Home
+          </Button>
+           </Link>
+         
+
+          {/* <Link
+             href='/home'
+             className='text-sm font-medium transition-colors hover:text-primary'
+           >
+             <HomeIcon width={22} height={22} color="green"/>
+               </Link> */}
+
+
+           </div>
+
+
+         {session?.user?.name ? (
+
+           <Avatar>
+             <AvatarFallback>
+               {session?.user?.name?.split(" ")[0][0].toUpperCase()}
+
+               {(session?.user?.name?.split(" ").length > 1
+                 ? session?.user?.name?.split(" ")[1][0]
+                 : ""
+               ).toUpperCase()}
+             </AvatarFallback>
+           </Avatar>
+
+       ) : (
+          
+         null
+       )}
+          
+        
+        </div>
+      </div>
     </>
-  );
+  )
+
+  // return (
+  //   <>
+  //         <div className="flex items-center space-x-2">
+  //         <div className='logo'>
+  //           <Link href='/'>
+  //             <Image
+  //               src='/assets/images/logo.png'
+  //               width={(162 * 3) / 4}
+  //               height={(67 * 3) / 4}
+  //               quality={100}
+  //               alt={"SkillZeit"}
+  //             />
+  //           </Link>
+  //         </div>
+  //         <Link
+  //           href='/home'
+  //           className='text-sm font-medium transition-colors hover:text-primary'
+  //         >
+  //           <HomeIcon width={22} height={22} color="green"/>
+  //             </Link>
+
+
+  //         </div>
+
+
+  //       {session?.user?.name ? (
+
+  //         <Avatar>
+  //           <AvatarFallback>
+  //             {session?.user?.name?.split(" ")[0][0].toUpperCase()}
+
+  //             {(session?.user?.name?.split(" ").length > 1
+  //               ? session?.user?.name?.split(" ")[1][0]
+  //               : ""
+  //             ).toUpperCase()}
+  //           </AvatarFallback>
+  //         </Avatar>
+
+  //     ) : (
+  //       // <Avatar>
+  //       //   <AvatarIcon className='w-6 h-6'></AvatarIcon>
+  //       // </Avatar>
+  //       null
+  //     )}
+
+
+  //   </>
+  // );
 }
