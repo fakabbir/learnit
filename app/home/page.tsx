@@ -87,6 +87,10 @@ export default function Home() {
 
         ))}
       </div>
+      
+      <div className="mt-8">
+      <a href="https://www.lqtoronto.com/downloads.html" target="#" className="text-blue-600 underline italic">Click to go to pdf download page(Books)</a>
+      </div>
 
 
     </div>
