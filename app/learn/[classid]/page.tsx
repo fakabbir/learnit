@@ -200,7 +200,7 @@ export default function Classroom({ params }: { params: { classid: string } }) {
 
   return (
     <>
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
  <div className='grid grid-cols-4'>
       <div className={showingPlaylist ? 'col-span-3' : 'col-span-4'}>
         <Button variant="outline" size="icon" onClick={() => setShowingPlaylist(!showingPlaylist)} className="float-right">
@@ -334,7 +334,7 @@ export default function Classroom({ params }: { params: { classid: string } }) {
       </div>
     </div>
     </div>
-    <div className="lg:hidden">
+    <div className="md:hidden">
       {/* mobile screen */}
       {studentProgress ? <div className="pb-6 pt-2 border-b items-center flex px-2">
           <div className="w-[96%]">
